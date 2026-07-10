@@ -1,7 +1,7 @@
 import { type App, apps } from "./app";
 import { $py, $root } from "./lib";
 
-async function fmtRust(check: boolean): Promise<void> {
+export async function fmtRust(check = false): Promise<void> {
   if (check) {
     await $root()`cargo fmt --manifest-path rust/Cargo.toml -- --check`;
   } else {
@@ -9,7 +9,7 @@ async function fmtRust(check: boolean): Promise<void> {
   }
 }
 
-async function fmtPy(check: boolean): Promise<void> {
+export async function fmtPy(check = false): Promise<void> {
   if (check) {
     await $py()`mise exec -- uv run ruff format --check packages`;
   } else {
@@ -17,7 +17,7 @@ async function fmtPy(check: boolean): Promise<void> {
   }
 }
 
-async function fmtContracts(check: boolean): Promise<void> {
+export async function fmtContracts(check = false): Promise<void> {
   if (check) {
     await $root()`forge fmt --check --root contracts`;
   } else {
@@ -25,27 +25,27 @@ async function fmtContracts(check: boolean): Promise<void> {
   }
 }
 
-async function lintRust(): Promise<void> {
+export async function lintRust(): Promise<void> {
   await $root()`cargo clippy --manifest-path rust/Cargo.toml --all-targets -- -D warnings`;
 }
 
-async function lintPy(): Promise<void> {
+export async function lintPy(): Promise<void> {
   await $py()`mise exec -- uv run ruff check packages`;
 }
 
-async function lintContracts(): Promise<void> {
+export async function lintContracts(): Promise<void> {
   await $root()`forge lint --root contracts`;
 }
 
-async function typecheckRust(): Promise<void> {
+export async function typecheckRust(): Promise<void> {
   await $root()`cargo check --manifest-path rust/Cargo.toml --all-targets`;
 }
 
-async function typecheckPy(): Promise<void> {
+export async function typecheckPy(): Promise<void> {
   await $py()`mise exec -- uv run pyright`;
 }
 
-async function typecheckContracts(): Promise<void> {
+export async function typecheckContracts(): Promise<void> {
   await $root()`forge build --root contracts`;
 }
 
@@ -74,9 +74,4 @@ export async function runTypecheck(app: App | undefined): Promise<void> {
     else if (a === "py") await typecheckPy();
     else await typecheckContracts();
   }
-}
-
-export async function runCheck(app: App | undefined): Promise<void> {
-  await runFmt(app, true);
-  await runLint(app);
 }

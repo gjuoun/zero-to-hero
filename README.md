@@ -27,8 +27,9 @@ zero-to-hero/
 
 ```bash
 just setup        # Bootstrap toolchains + workspaces
-just check        # lint + format-check (all)
-just typecheck    # typecheck (all)
+just fmt          # Format (all)
+just lint         # Lint (all)
+just typecheck    # Typecheck (all)
 ```
 
 ### Quality commands
@@ -38,13 +39,13 @@ CLI is Bun + `cmd-ts` (`scripts/cli/`). `just` is a thin wrapper.
 Optional app: `rust` | `py` | `contracts` (omit = all).
 
 ```bash
-just check
-just check rust
-just fmt py
+just fmt
+just fmt rust
+just lint py
 just lint contracts
 just typecheck
 bun run z2h --help
-bun run z2h check --help
+bun run z2h fmt --help
 ```
 
 | Layer | Format | Lint | Typecheck |

@@ -9,9 +9,6 @@ default:
 setup:
   bash scripts/setup.sh
 
-check *args:
-  bun run scripts/cli/main.ts check {{args}}
-
 fmt *args:
   bun run scripts/cli/main.ts fmt {{args}}
 
