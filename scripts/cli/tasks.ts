@@ -1,8 +1,8 @@
 import { type App, apps } from "./app";
-import { $py, $root } from "./lib";
+import { $contracts, $py, $rust } from "./lib";
 
 export async function fmtRust(): Promise<void> {
-  await $root()`cargo fmt --manifest-path rust/Cargo.toml`;
+  await $rust()`cargo fmt`;
 }
 
 export async function fmtPy(): Promise<void> {
@@ -10,11 +10,11 @@ export async function fmtPy(): Promise<void> {
 }
 
 export async function fmtContracts(): Promise<void> {
-  await $root()`forge fmt --root contracts`;
+  await $contracts()`forge fmt`;
 }
 
 export async function lintRust(): Promise<void> {
-  await $root()`cargo clippy --manifest-path rust/Cargo.toml --all-targets -- -D warnings`;
+  await $rust()`cargo clippy --all-targets -- -D warnings`;
 }
 
 export async function lintPy(): Promise<void> {
@@ -22,11 +22,11 @@ export async function lintPy(): Promise<void> {
 }
 
 export async function lintContracts(): Promise<void> {
-  await $root()`forge lint --root contracts`;
+  await $contracts()`forge lint`;
 }
 
 export async function typecheckRust(): Promise<void> {
-  await $root()`cargo check --manifest-path rust/Cargo.toml --all-targets`;
+  await $rust()`cargo check --all-targets`;
 }
 
 export async function typecheckPy(): Promise<void> {
@@ -34,7 +34,7 @@ export async function typecheckPy(): Promise<void> {
 }
 
 export async function typecheckContracts(): Promise<void> {
-  await $root()`forge build --root contracts`;
+  await $contracts()`forge build`;
 }
 
 export async function runFmt(app: App | undefined): Promise<void> {

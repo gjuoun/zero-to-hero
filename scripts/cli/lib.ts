@@ -6,14 +6,18 @@ export function repoRoot(): string {
   return new URL("../..", import.meta.url).pathname;
 }
 
-export const pyCwd = () => `${repoRoot()}/py`;
-
-/** Shell at repo root (throws on non-zero). */
 export function $root() {
   return $.cwd(repoRoot());
 }
 
-/** Shell in py/ workspace. */
+export function $rust() {
+  return $.cwd(`${repoRoot()}/rust`);
+}
+
 export function $py() {
-  return $.cwd(pyCwd());
+  return $.cwd(`${repoRoot()}/py`);
+}
+
+export function $contracts() {
+  return $.cwd(`${repoRoot()}/contracts`);
 }
