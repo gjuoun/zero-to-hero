@@ -32,3 +32,10 @@ contracts/lib/
 
 # Notebooks
 **/.ipynb_checkpoints/
+
+# Node / Bun
+node_modules/
+
+# Local
+.cursor/
+*.tgz

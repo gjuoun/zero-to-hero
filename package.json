@@ -1,0 +1,19 @@
+{
+  "name": "zero-to-hero",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "bun run scripts/cli/main.ts check",
+    "fmt": "bun run scripts/cli/main.ts fmt",
+    "lint": "bun run scripts/cli/main.ts lint",
+    "typecheck": "bun run scripts/cli/main.ts typecheck",
+    "z2h": "bun run scripts/cli/main.ts"
+  },
+  "dependencies": {
+    "cmd-ts": "^0.15.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5"
+  }
+}

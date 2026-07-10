@@ -1,162 +1,29 @@
 set shell := ["bash", "-cu"]
 
+# Thin wrappers → bun scripts/cli (cmd-ts)
 # Apps: rust | py | contracts  (omit = all)
 
 default:
   @just --list
 
-# ── Bootstrap ─────────────────────────────────────────────
-
 setup:
   bash scripts/setup.sh
 
-# ── Public API ────────────────────────────────────────────
-# just check [app]       lint + format-check (+ typecheck for that app)
-# just fmt [app]         apply format
-# just lint [app]        lint only
-# just typecheck [app]   typecheck only
+# lint + format-check
+check *args:
+  bun run scripts/cli/main.ts check {{args}}
 
-# lint + format-check for app (or all)
-check app="":
-  #!/usr/bin/env bash
-  set -euo pipefail
-  app="{{app}}"
-  case "$app" in
-    "")
-      just _rust-fmt-check && just _rust-lint
-      just _py-fmt-check && just _py-lint
-      just _contracts-fmt-check && just _contracts-lint
-      ;;
-    rust)
-      just _rust-fmt-check && just _rust-lint
-      ;;
-    py)
-      just _py-fmt-check && just _py-lint
-      ;;
-    contracts)
-      just _contracts-fmt-check && just _contracts-lint
-      ;;
-    *)
-      echo "error: unknown app '$app' (use: rust | py | contracts)" >&2
-      exit 1
-      ;;
-  esac
+# apply format
+fmt *args:
+  bun run scripts/cli/main.ts fmt {{args}}
 
-# apply format for app (or all)
-fmt app="":
-  #!/usr/bin/env bash
-  set -euo pipefail
-  app="{{app}}"
-  case "$app" in
-    "")
-      just _rust-fmt
-      just _py-fmt
-      just _contracts-fmt
-      ;;
-    rust) just _rust-fmt ;;
-    py) just _py-fmt ;;
-    contracts) just _contracts-fmt ;;
-    *)
-      echo "error: unknown app '$app' (use: rust | py | contracts)" >&2
-      exit 1
-      ;;
-  esac
+# lint only
+lint *args:
+  bun run scripts/cli/main.ts lint {{args}}
 
-# lint for app (or all)
-lint app="":
-  #!/usr/bin/env bash
-  set -euo pipefail
-  app="{{app}}"
-  case "$app" in
-    "")
-      just _rust-lint
-      just _py-lint
-      just _contracts-lint
-      ;;
-    rust) just _rust-lint ;;
-    py) just _py-lint ;;
-    contracts) just _contracts-lint ;;
-    *)
-      echo "error: unknown app '$app' (use: rust | py | contracts)" >&2
-      exit 1
-      ;;
-  esac
-
-# typecheck for app (or all)
-typecheck app="":
-  #!/usr/bin/env bash
-  set -euo pipefail
-  app="{{app}}"
-  case "$app" in
-    "")
-      just _rust-typecheck
-      just _py-typecheck
-      just _contracts-typecheck
-      ;;
-    rust) just _rust-typecheck ;;
-    py) just _py-typecheck ;;
-    contracts) just _contracts-typecheck ;;
-    *)
-      echo "error: unknown app '$app' (use: rust | py | contracts)" >&2
-      exit 1
-      ;;
-  esac
-
-# ── Rust (private) ────────────────────────────────────────
-
-[private]
-_rust-fmt:
-  cargo fmt --manifest-path rust/Cargo.toml
-
-[private]
-_rust-fmt-check:
-  cargo fmt --manifest-path rust/Cargo.toml -- --check
-
-[private]
-_rust-lint:
-  cargo clippy --manifest-path rust/Cargo.toml --all-targets -- -D warnings
-
-[private]
-_rust-typecheck:
-  cargo check --manifest-path rust/Cargo.toml --all-targets
-
-# ── Python (private) ──────────────────────────────────────
-
-[private]
-_py-fmt:
-  cd py && mise exec -- uv run ruff format packages
-
-[private]
-_py-fmt-check:
-  cd py && mise exec -- uv run ruff format --check packages
-
-[private]
-_py-lint:
-  cd py && mise exec -- uv run ruff check packages
-
-[private]
-_py-typecheck:
-  cd py && mise exec -- uv run pyright
-
-# ── Contracts (private) ───────────────────────────────────
-
-[private]
-_contracts-fmt:
-  forge fmt --root contracts
-
-[private]
-_contracts-fmt-check:
-  forge fmt --check --root contracts
-
-[private]
-_contracts-lint:
-  forge lint --root contracts
-
-[private]
-_contracts-typecheck:
-  forge build --root contracts
-
-# ── Misc ──────────────────────────────────────────────────
+# typecheck only
+typecheck *args:
+  bun run scripts/cli/main.ts typecheck {{args}}
 
 # Optional learning clones (outside monorepo)
 refs:

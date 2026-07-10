@@ -26,22 +26,25 @@ zero-to-hero/
 ## Quickstart
 
 ```bash
-just setup              # Bootstrap toolchains + workspaces
-just check              # lint + format-check (all apps)
-just typecheck          # typecheck (all apps)
+just setup                 # Bootstrap toolchains + workspaces
+just check                 # lint + format-check (all apps)
+just typecheck             # typecheck (all apps)
 ```
 
 ### Quality commands
 
+CLI is Bun + `cmd-ts` (`scripts/cli/`). `just` is a thin wrapper.
+
 Apps: `rust` | `py` | `contracts`. Omit app = all.
 
-| Command | Meaning |
-|---------|---------|
-| `just check` | lint + format-check (all) |
-| `just check rust` | lint + format-check (rust only) |
-| `just fmt` / `just fmt py` | apply format |
-| `just lint` / `just lint contracts` | lint only |
-| `just typecheck` / `just typecheck rust` | typecheck only |
+```bash
+just check              # or: bun run check
+just check rust
+just fmt py
+just lint contracts
+just typecheck
+bun run z2h --help
+```
 
 | App | Format | Lint | Typecheck |
 |-----|--------|------|-----------|
