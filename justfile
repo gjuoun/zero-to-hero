@@ -10,8 +10,8 @@ setup:
 # Health gates
 check:
   cargo check --manifest-path rust/Cargo.toml
-  cd py && uv sync
-  cd py && uv run --package data python -c "import pandas, numpy, ccxt; print('py-ok')"
+  cd py && mise exec -- uv sync --all-packages
+  cd py && mise exec -- uv run --package data python -c "import pandas, numpy, ccxt; print('py-ok')"
   forge --version
 
 # Language helpers
@@ -22,10 +22,10 @@ rust-test:
   cargo test --manifest-path rust/Cargo.toml
 
 py-sync:
-  cd py && uv sync
+  cd py && mise exec -- uv sync --all-packages
 
 py-check:
-  cd py && uv run --package data python -c "import pandas, numpy, ccxt; print('py-ok')"
+  cd py && mise exec -- uv run --package data python -c "import pandas, numpy, ccxt; print('py-ok')"
 
 # Optional learning clones (outside monorepo)
 refs:

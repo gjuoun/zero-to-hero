@@ -22,18 +22,15 @@ else
   echo "skip cargo check: rust/Cargo.toml missing (create in Task 3)"
 fi
 
-echo "==> Python: uv sync (data package)"
-if ! command -v uv >/dev/null 2>&1; then
-  echo "error: uv not found after mise install" >&2
-  exit 1
-fi
+echo "==> Python: uv sync (workspace + members)"
+# Prefer mise-managed uv (0.11+) over older cargo-installed uv on PATH
 if [[ -f py/pyproject.toml ]]; then
   (
     cd py
-    uv sync
+    mise exec -- uv sync --all-packages
   )
 else
-  echo "skip uv sync: py/pyproject.toml missing (create in Task 4)"
+  echo "skip uv sync: py/pyproject.toml missing"
 fi
 
 echo "==> Foundry (standalone source of truth)"
