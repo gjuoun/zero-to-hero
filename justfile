@@ -1,5 +1,7 @@
 set shell := ["bash", "-cu"]
 
+# Apps: rust | py | contracts  (omit = all)
+
 default:
   @just --list
 
@@ -8,108 +10,155 @@ default:
 setup:
   bash scripts/setup.sh
 
-# Health: toolchains + workspace smoke (not full QA)
-check:
-  cargo check --manifest-path rust/Cargo.toml
-  cd py && mise exec -- uv sync --all-packages
-  cd py && mise exec -- uv run --package data python -c "import pandas, numpy, ccxt; print('py-ok')"
-  forge --version
+# ── Public API ────────────────────────────────────────────
+# just check [app]       lint + format-check (+ typecheck for that app)
+# just fmt [app]         apply format
+# just lint [app]        lint only
+# just typecheck [app]   typecheck only
 
-# ── Rust ──────────────────────────────────────────────────
+# lint + format-check for app (or all)
+check app="":
+  #!/usr/bin/env bash
+  set -euo pipefail
+  app="{{app}}"
+  case "$app" in
+    "")
+      just _rust-fmt-check && just _rust-lint
+      just _py-fmt-check && just _py-lint
+      just _contracts-fmt-check && just _contracts-lint
+      ;;
+    rust)
+      just _rust-fmt-check && just _rust-lint
+      ;;
+    py)
+      just _py-fmt-check && just _py-lint
+      ;;
+    contracts)
+      just _contracts-fmt-check && just _contracts-lint
+      ;;
+    *)
+      echo "error: unknown app '$app' (use: rust | py | contracts)" >&2
+      exit 1
+      ;;
+  esac
 
-[group('rust')]
-rust-fmt:
+# apply format for app (or all)
+fmt app="":
+  #!/usr/bin/env bash
+  set -euo pipefail
+  app="{{app}}"
+  case "$app" in
+    "")
+      just _rust-fmt
+      just _py-fmt
+      just _contracts-fmt
+      ;;
+    rust) just _rust-fmt ;;
+    py) just _py-fmt ;;
+    contracts) just _contracts-fmt ;;
+    *)
+      echo "error: unknown app '$app' (use: rust | py | contracts)" >&2
+      exit 1
+      ;;
+  esac
+
+# lint for app (or all)
+lint app="":
+  #!/usr/bin/env bash
+  set -euo pipefail
+  app="{{app}}"
+  case "$app" in
+    "")
+      just _rust-lint
+      just _py-lint
+      just _contracts-lint
+      ;;
+    rust) just _rust-lint ;;
+    py) just _py-lint ;;
+    contracts) just _contracts-lint ;;
+    *)
+      echo "error: unknown app '$app' (use: rust | py | contracts)" >&2
+      exit 1
+      ;;
+  esac
+
+# typecheck for app (or all)
+typecheck app="":
+  #!/usr/bin/env bash
+  set -euo pipefail
+  app="{{app}}"
+  case "$app" in
+    "")
+      just _rust-typecheck
+      just _py-typecheck
+      just _contracts-typecheck
+      ;;
+    rust) just _rust-typecheck ;;
+    py) just _py-typecheck ;;
+    contracts) just _contracts-typecheck ;;
+    *)
+      echo "error: unknown app '$app' (use: rust | py | contracts)" >&2
+      exit 1
+      ;;
+  esac
+
+# ── Rust (private) ────────────────────────────────────────
+
+[private]
+_rust-fmt:
   cargo fmt --manifest-path rust/Cargo.toml
 
-[group('rust')]
-rust-fmt-check:
+[private]
+_rust-fmt-check:
   cargo fmt --manifest-path rust/Cargo.toml -- --check
 
-[group('rust')]
-rust-lint:
+[private]
+_rust-lint:
   cargo clippy --manifest-path rust/Cargo.toml --all-targets -- -D warnings
 
-[group('rust')]
-rust-typecheck:
+[private]
+_rust-typecheck:
   cargo check --manifest-path rust/Cargo.toml --all-targets
 
-[group('rust')]
-rust-test:
-  cargo test --manifest-path rust/Cargo.toml
+# ── Python (private) ──────────────────────────────────────
 
-[group('rust')]
-rust-qa: rust-fmt-check rust-lint rust-typecheck
-
-# ── Python ────────────────────────────────────────────────
-
-[group('py')]
-py-sync:
-  cd py && mise exec -- uv sync --all-packages
-
-[group('py')]
-py-fmt:
+[private]
+_py-fmt:
   cd py && mise exec -- uv run ruff format packages
 
-[group('py')]
-py-fmt-check:
+[private]
+_py-fmt-check:
   cd py && mise exec -- uv run ruff format --check packages
 
-[group('py')]
-py-lint:
+[private]
+_py-lint:
   cd py && mise exec -- uv run ruff check packages
 
-[group('py')]
-py-typecheck:
+[private]
+_py-typecheck:
   cd py && mise exec -- uv run pyright
 
-[group('py')]
-py-check:
-  cd py && mise exec -- uv run --package data python -c "import pandas, numpy, ccxt; print('py-ok')"
+# ── Contracts (private) ───────────────────────────────────
 
-[group('py')]
-py-qa: py-fmt-check py-lint py-typecheck
-
-# ── Contracts (Foundry) ───────────────────────────────────
-
-[group('contracts')]
-contracts-fmt:
+[private]
+_contracts-fmt:
   forge fmt --root contracts
 
-[group('contracts')]
-contracts-fmt-check:
+[private]
+_contracts-fmt-check:
   forge fmt --check --root contracts
 
-[group('contracts')]
-contracts-lint:
+[private]
+_contracts-lint:
   forge lint --root contracts
 
-[group('contracts')]
-contracts-typecheck:
-  # Compile = Solidity typecheck; empty src is fine for Phase 0
+[private]
+_contracts-typecheck:
   forge build --root contracts
 
-[group('contracts')]
-contracts-qa: contracts-fmt-check contracts-lint contracts-typecheck
+# ── Misc ──────────────────────────────────────────────────
 
-# ── Aggregate ─────────────────────────────────────────────
-
-[group('qa')]
-fmt: rust-fmt py-fmt contracts-fmt
-
-[group('qa')]
-fmt-check: rust-fmt-check py-fmt-check contracts-fmt-check
-
-[group('qa')]
-lint: rust-lint py-lint contracts-lint
-
-[group('qa')]
-typecheck: rust-typecheck py-typecheck contracts-typecheck
-
-[group('qa')]
-qa: rust-qa py-qa contracts-qa
-
-# ── Refs ──────────────────────────────────────────────────
-
+# Optional learning clones (outside monorepo)
 refs:
   mkdir -p "${HOME}/code/refs"
   test -d "${HOME}/code/refs/hftbacktest" || git clone --depth 1 https://github.com/nkaz001/hftbacktest "${HOME}/code/refs/hftbacktest"
