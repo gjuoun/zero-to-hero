@@ -1,0 +1,12 @@
+[project]
+name = "zero-to-hero-py"
+version = "0.1.0"
+description = "Python workspace for zero-to-hero quant stack"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[dependency-groups]
+dev = []
