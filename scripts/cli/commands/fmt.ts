@@ -7,6 +7,6 @@ export const fmt = command({
   description: "apply format",
   args: { app },
   handler: async ({ app }) => {
-    await runFmt(app, false);
+    await runFmt(app);
   },
 });
