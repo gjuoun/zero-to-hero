@@ -1,7 +1,6 @@
 set shell := ["bash", "-cu"]
 
 # Thin wrappers → bun scripts/cli (cmd-ts)
-# Apps: rust | py | contracts  (omit = all)
 
 default:
   @just --list
@@ -9,21 +8,17 @@ default:
 setup:
   bash scripts/setup.sh
 
-# lint + format-check
-check *args:
-  bun run scripts/cli/main.ts check {{args}}
+check:
+  bun run scripts/cli/main.ts check
 
-# apply format
-fmt *args:
-  bun run scripts/cli/main.ts fmt {{args}}
+fmt:
+  bun run scripts/cli/main.ts fmt
 
-# lint only
-lint *args:
-  bun run scripts/cli/main.ts lint {{args}}
+lint:
+  bun run scripts/cli/main.ts lint
 
-# typecheck only
-typecheck *args:
-  bun run scripts/cli/main.ts typecheck {{args}}
+typecheck:
+  bun run scripts/cli/main.ts typecheck
 
 # Optional learning clones (outside monorepo)
 refs:

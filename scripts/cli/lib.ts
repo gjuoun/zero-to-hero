@@ -1,14 +1,9 @@
-/** Shared app names and shell helpers for the monorepo CLI. */
+/** Shared shell helpers for the monorepo CLI. */
 
 export const APPS = ["rust", "py", "contracts"] as const;
 export type App = (typeof APPS)[number];
 
-export function resolveApps(app?: App): App[] {
-  return app ? [app] : [...APPS];
-}
-
 export function repoRoot(): string {
-  // scripts/cli → repo root
   return new URL("../..", import.meta.url).pathname;
 }
 
@@ -29,3 +24,5 @@ export async function sh(
     throw new Error(`command failed (${code}): ${cmd.join(" ")}`);
   }
 }
+
+export const pyCwd = () => `${repoRoot()}/py`;

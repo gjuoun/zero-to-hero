@@ -26,31 +26,30 @@ zero-to-hero/
 ## Quickstart
 
 ```bash
-just setup                 # Bootstrap toolchains + workspaces
-just check                 # lint + format-check (all apps)
-just typecheck             # typecheck (all apps)
+just setup        # Bootstrap toolchains + workspaces
+just check        # lint + format-check
+just typecheck    # typecheck
 ```
 
 ### Quality commands
 
-CLI is Bun + `cmd-ts` (`scripts/cli/`). `just` is a thin wrapper.
-
-Apps: `rust` | `py` | `contracts`. Omit app = all.
+CLI is Bun + `cmd-ts` (`scripts/cli/commands/`). `just` is a thin wrapper.
 
 ```bash
-just check              # or: bun run check
-just check rust
-just fmt py
-just lint contracts
+just check       # or: bun run check
+just fmt
+just lint
 just typecheck
 bun run z2h --help
 ```
 
-| App | Format | Lint | Typecheck |
-|-----|--------|------|-----------|
+| Layer | Format | Lint | Typecheck |
+|-------|--------|------|-----------|
 | **rust** | `cargo fmt` | `cargo clippy` | `cargo check` |
 | **py** | `ruff format` | `ruff check` | `pyright` |
 | **contracts** | `forge fmt` | `forge lint` | `forge build` |
+
+Need a dedicated flow later? Add a new file under `scripts/cli/commands/`.
 
 ## Manual Checklist
 
