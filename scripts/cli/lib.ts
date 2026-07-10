@@ -7,7 +7,7 @@ export function repoRoot(): string {
 }
 
 function shell(cwd: string) {
-  return (strings: TemplateStringsArray, ...values: unknown[]) => {
+  return (strings: TemplateStringsArray, ...values: string[]) => {
     const cmd = strings
       .map((s, i) => s + (i < values.length ? String(values[i] ?? "") : ""))
       .join("")
