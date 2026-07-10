@@ -1,6 +1,7 @@
 set shell := ["bash", "-cu"]
 
 # Thin wrappers → bun scripts/cli (cmd-ts)
+# Optional app: rust | py | contracts
 
 default:
   @just --list
@@ -8,19 +9,18 @@ default:
 setup:
   bash scripts/setup.sh
 
-check:
-  bun run scripts/cli/main.ts check
+check *args:
+  bun run scripts/cli/main.ts check {{args}}
 
-fmt:
-  bun run scripts/cli/main.ts fmt
+fmt *args:
+  bun run scripts/cli/main.ts fmt {{args}}
 
-lint:
-  bun run scripts/cli/main.ts lint
+lint *args:
+  bun run scripts/cli/main.ts lint {{args}}
 
-typecheck:
-  bun run scripts/cli/main.ts typecheck
+typecheck *args:
+  bun run scripts/cli/main.ts typecheck {{args}}
 
-# Optional learning clones (outside monorepo)
 refs:
   mkdir -p "${HOME}/code/refs"
   test -d "${HOME}/code/refs/hftbacktest" || git clone --depth 1 https://github.com/nkaz001/hftbacktest "${HOME}/code/refs/hftbacktest"

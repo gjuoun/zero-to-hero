@@ -1,8 +1,4 @@
 #!/usr/bin/env bun
-/**
- * Monorepo task CLI — check | fmt | lint | typecheck
- * One file per subcommand under commands/.
- */
 import { run, subcommands } from "cmd-ts";
 import { check } from "./commands/check";
 import { fmt } from "./commands/fmt";
@@ -15,9 +11,4 @@ const cli = subcommands({
   cmds: { check, fmt, lint, typecheck },
 });
 
-try {
-  await run(cli, process.argv.slice(2));
-} catch (e) {
-  console.error(e instanceof Error ? e.message : e);
-  process.exit(1);
-}
+await run(cli, process.argv.slice(2));

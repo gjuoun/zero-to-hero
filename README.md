@@ -27,20 +27,24 @@ zero-to-hero/
 
 ```bash
 just setup        # Bootstrap toolchains + workspaces
-just check        # lint + format-check
-just typecheck    # typecheck
+just check        # lint + format-check (all)
+just typecheck    # typecheck (all)
 ```
 
 ### Quality commands
 
-CLI is Bun + `cmd-ts` (`scripts/cli/commands/`). `just` is a thin wrapper.
+CLI is Bun + `cmd-ts` (`scripts/cli/`). `just` is a thin wrapper.
+
+Optional app: `rust` | `py` | `contracts` (omit = all).
 
 ```bash
-just check       # or: bun run check
-just fmt
-just lint
+just check
+just check rust
+just fmt py
+just lint contracts
 just typecheck
 bun run z2h --help
+bun run z2h check --help
 ```
 
 | Layer | Format | Lint | Typecheck |
@@ -49,7 +53,7 @@ bun run z2h --help
 | **py** | `ruff format` | `ruff check` | `pyright` |
 | **contracts** | `forge fmt` | `forge lint` | `forge build` |
 
-Need a dedicated flow later? Add a new file under `scripts/cli/commands/`.
+New subcommand → add `scripts/cli/commands/<name>.ts` and register in `main.ts`.
 
 ## Manual Checklist
 

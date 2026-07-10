@@ -1,11 +1,10 @@
-/** Shared shell helpers for the monorepo CLI. */
-
-export const APPS = ["rust", "py", "contracts"] as const;
-export type App = (typeof APPS)[number];
+/** Shell helpers for monorepo tasks. */
 
 export function repoRoot(): string {
   return new URL("../..", import.meta.url).pathname;
 }
+
+export const pyCwd = () => `${repoRoot()}/py`;
 
 /** Run a shell command; inherit stdio; throw on non-zero. */
 export async function sh(
@@ -24,5 +23,3 @@ export async function sh(
     throw new Error(`command failed (${code}): ${cmd.join(" ")}`);
   }
 }
-
-export const pyCwd = () => `${repoRoot()}/py`;

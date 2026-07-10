@@ -1,18 +1,12 @@
 import { command } from "cmd-ts";
-import {
-  typecheckContracts,
-  typecheckPy,
-  typecheckRust,
-} from "../tasks";
+import { app } from "../app";
+import { runTypecheck } from "../tasks";
 
-/** typecheck (all apps) */
 export const typecheck = command({
   name: "typecheck",
-  description: "typecheck (all apps)",
-  args: {},
-  handler: async () => {
-    await typecheckRust();
-    await typecheckPy();
-    await typecheckContracts();
+  description: "typecheck",
+  args: { app },
+  handler: async ({ app }) => {
+    await runTypecheck(app);
   },
 });
