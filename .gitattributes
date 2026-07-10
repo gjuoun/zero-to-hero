@@ -1,0 +1,2 @@
+# Markdown: exclude from language stats and PR +/- line counts
+*.md linguist-documentation -diff
