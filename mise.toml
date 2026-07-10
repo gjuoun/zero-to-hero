@@ -1,0 +1,7 @@
+[tools]
+# mise manages python + uv + just
+# rust: rustup (not mise) — verified by cargo check
+# foundry: standalone install — verified by forge --version
+python = "3.14"
+uv = "latest"
+just = "latest"
