@@ -9,3 +9,28 @@ dependencies = []
 members = [
     "packages/data",
 ]
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.411",
+    "ruff>=0.15.21",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+src = ["packages"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "N", "B", "UP", "C4", "SIM", "RUF"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pyright]
+include = ["packages"]
+exclude = ["**/__pycache__", "**/.venv", "notebooks"]
+pythonVersion = "3.14"
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"

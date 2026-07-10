@@ -27,10 +27,21 @@ zero-to-hero/
 
 ```bash
 just setup   # Bootstrap all toolchains and workspaces
-just check   # Verify everything is healthy
+just check   # Health: cargo + py imports + forge
+just qa      # Lint + format-check + typecheck (all languages)
 ```
 
-Expected output: `cargo check` passes, `uv run` prints `py-ok`, `forge --version` shows a version string.
+### Quality commands
+
+| Recipe | Rust | Python | Contracts |
+|--------|------|--------|-----------|
+| **fmt** | `cargo fmt` | `ruff format` | `forge fmt` |
+| **lint** | `cargo clippy` | `ruff check` | `forge lint` |
+| **typecheck** | `cargo check` | `pyright` | `forge build` |
+| **qa** | all of the above (check mode) | same | same |
+
+Per-language: `just rust-qa`, `just py-qa`, `just contracts-qa`.  
+Apply format: `just fmt` (or `just rust-fmt` / `py-fmt` / `contracts-fmt`).
 
 ## Manual Checklist
 
