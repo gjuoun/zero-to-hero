@@ -30,7 +30,7 @@ fi
 if [[ -f py/pyproject.toml ]]; then
   (
     cd py
-    uv sync --all-packages
+    uv sync
   )
 else
   echo "skip uv sync: py/pyproject.toml missing (create in Task 4)"

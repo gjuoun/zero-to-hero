@@ -10,7 +10,7 @@ setup:
 # Health gates
 check:
   cargo check --manifest-path rust/Cargo.toml
-  cd py && uv sync --all-packages
+  cd py && uv sync
   cd py && uv run --package data python -c "import pandas, numpy, ccxt; print('py-ok')"
   forge --version
 
@@ -22,7 +22,7 @@ rust-test:
   cargo test --manifest-path rust/Cargo.toml
 
 py-sync:
-  cd py && uv sync --all-packages
+  cd py && uv sync
 
 py-check:
   cd py && uv run --package data python -c "import pandas, numpy, ccxt; print('py-ok')"
