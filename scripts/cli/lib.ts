@@ -1,20 +1,19 @@
 /** Shell helpers for monorepo tasks. */
 
+import { $ } from "bun";
+
 export function repoRoot(): string {
   return new URL("../..", import.meta.url).pathname;
 }
 
 function shell(cwd: string) {
-  return (cmd: string) => {
+  return (strings: TemplateStringsArray, ...values: unknown[]) => {
+    const cmd = strings
+      .map((s, i) => s + (i < values.length ? String(values[i] ?? "") : ""))
+      .join("")
+      .trim();
     console.error(`$ ${cmd}`);
-    const proc = Bun.spawn(["bash", "-c", cmd], {
-      cwd,
-      stdout: "inherit",
-      stderr: "inherit",
-    });
-    return proc.exited.then((code) => {
-      if (code !== 0) throw new Error(`command failed (${code}): ${cmd}`);
-    });
+    return $.cwd(cwd)(strings, ...values);
   };
 }
 
